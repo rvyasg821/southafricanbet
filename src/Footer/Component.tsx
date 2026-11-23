@@ -6,7 +6,7 @@ import { CmsImg } from '@/components/CmsImg'
 import { cn } from '@/utilities/ui'
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import { SOCIAL_PATHS } from '@/utilities/socialIcons'
-import { FooterColumn } from './FooterColumn'
+import { FooterColumns } from './FooterColumns'
 import { FooterLegalNav } from './FooterLegalNav'
 import { NewsletterForm } from './NewsletterForm'
 
@@ -79,9 +79,7 @@ export async function Footer() {
         </div>
 
         <div className="site-footer-columns-grid">
-          {columns.map((column, i) => (
-            <FooterColumn column={column} key={column.id ?? i} />
-          ))}
+          <FooterColumns columns={columns} />
         </div>
 
         <div className="site-footer-bottom-bar">
@@ -96,11 +94,21 @@ export async function Footer() {
                 {socialLinks.map(({ id, platform, url }, i) => {
                   const social = SOCIAL_PATHS[platform]
                   if (!social) return null
+                  const icon = (
+                    <svg aria-hidden="true" className="site-footer-social-icon" viewBox="0 0 24 24">
+                      <path d={social.path} />
+                    </svg>
+                  )
+                  if (url === '#') {
+                    return (
+                      <span aria-label={social.label} className="site-footer-social-link" key={id ?? i}>
+                        {icon}
+                      </span>
+                    )
+                  }
                   return (
                     <Link aria-label={social.label} className="site-footer-social-link" href={url} key={id ?? i}>
-                      <svg aria-hidden="true" className="site-footer-social-icon" viewBox="0 0 24 24">
-                        <path d={social.path} />
-                      </svg>
+                      {icon}
                     </Link>
                   )
                 })}

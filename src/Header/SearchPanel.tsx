@@ -10,6 +10,23 @@ import { initialsLogoSrc } from '@/components/BookmakerLogo'
 import { cn } from '@/utilities/ui'
 import { reviewHref } from '@/utilities/reviewHref'
 
+/** Only these bookmakers link to their page from the search panel for now; everything else is plain. */
+const LINKABLE_REVIEW_SLUGS = new Set(['10bet'])
+
+/** A result row: a link when it has a destination, otherwise a static (non-clickable) row. */
+const ResultRow: React.FC<{ children: React.ReactNode; href?: string; onClose: () => void }> = ({
+  children,
+  href,
+  onClose,
+}) =>
+  href ? (
+    <Link className="search-panel-result-row" href={href} onClick={onClose}>
+      {children}
+    </Link>
+  ) : (
+    <div className="search-panel-result-row">{children}</div>
+  )
+
 const SUGGESTIONS = ['Free spins', 'Welcome bonus', 'Rugby', 'Payout']
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -162,7 +179,7 @@ export const SearchPanel: React.FC<{ onClose: () => void; open: boolean }> = ({ 
                     <ul className="search-panel-results-list">
                       {results.reviews.map((review) => (
                         <li key={review.id}>
-                          <Link className="search-panel-result-row" href={reviewHref(review.slug)} onClick={onClose}>
+                          <ResultRow href={LINKABLE_REVIEW_SLUGS.has(review.slug) ? reviewHref(review.slug) : undefined} onClose={onClose}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               alt=""
@@ -180,8 +197,10 @@ export const SearchPanel: React.FC<{ onClose: () => void; open: boolean }> = ({ 
                               </div>
                               {review.bonusText && <p className="search-panel-result-bonus">{review.bonusText}</p>}
                             </div>
-                            <ArrowRight aria-hidden="true" className="search-panel-result-arrow" />
-                          </Link>
+                            {LINKABLE_REVIEW_SLUGS.has(review.slug) && (
+                              <ArrowRight aria-hidden="true" className="search-panel-result-arrow" />
+                            )}
+                          </ResultRow>
                         </li>
                       ))}
                     </ul>
@@ -196,7 +215,7 @@ export const SearchPanel: React.FC<{ onClose: () => void; open: boolean }> = ({ 
                     <ul className="search-panel-results-list">
                       {results.posts.map((post) => (
                         <li key={post.id}>
-                          <Link className="search-panel-result-row" href={`/news/${post.slug}`} onClick={onClose}>
+                          <ResultRow onClose={onClose}>
                             {post.image ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img alt="" className="search-panel-post-thumb" src={post.image} />
@@ -216,7 +235,7 @@ export const SearchPanel: React.FC<{ onClose: () => void; open: boolean }> = ({ 
                                 )}
                               </p>
                             </div>
-                          </Link>
+                          </ResultRow>
                         </li>
                       ))}
                     </ul>

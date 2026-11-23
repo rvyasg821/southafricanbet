@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import RichText from '@/components/RichText'
+import { Turnstile } from '@/components/Turnstile'
 import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 
 import { fields } from './fields'
@@ -64,6 +65,8 @@ export const FormBlockClient: React.FC<
   const [isLoading, setIsLoading] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState<boolean>()
   const [error, setError] = useState<{ message: string; status?: string } | undefined>()
+  const [captchaToken, setCaptchaToken] = useState<null | string>(null)
+  const [captchaReset, setCaptchaReset] = useState(0)
   const router = useRouter()
 
   const onSubmit = useCallback(
@@ -71,6 +74,11 @@ export const FormBlockClient: React.FC<
       let loadingTimerID: ReturnType<typeof setTimeout>
       const submitForm = async () => {
         setError(undefined)
+
+        if (!captchaToken) {
+          setError({ message: 'Please wait a moment for the security check to finish, then try again.' })
+          return
+        }
 
         const dataToSend = Object.entries(data).map(([name, value]) => ({
           field: name,
@@ -90,11 +98,13 @@ export const FormBlockClient: React.FC<
             }),
             headers: {
               'Content-Type': 'application/json',
+              'x-captcha-token': captchaToken,
             },
             method: 'POST',
           })
 
           const res = await req.json()
+          setCaptchaReset((n) => n + 1)
 
           clearTimeout(loadingTimerID)
 
@@ -121,6 +131,7 @@ export const FormBlockClient: React.FC<
           }
         } catch (err) {
           console.warn(err)
+          setCaptchaReset((n) => n + 1)
           setIsLoading(false)
           setError({
             message: 'Something went wrong.',
@@ -130,7 +141,7 @@ export const FormBlockClient: React.FC<
 
       void submitForm()
     },
-    [router, formID, redirect, confirmationType],
+    [router, formID, redirect, confirmationType, captchaToken],
   )
 
   const hasSidebar = Boolean(sidebar && (sidebar.noteTitle || sidebar.noteText || sidebar.supportEmail || sidebar.showSocial || sidebar.showGamblingHelp))
@@ -153,7 +164,7 @@ export const FormBlockClient: React.FC<
                   <RichText data={introContent} enableGutter={false} enableProse={false} />
                 </div>
               )}
-              {error && <p className="form-error">{`${error.status || '500'}: ${error.message || ''}`}</p>}
+              {error && <p className="form-error">{error.message || 'Something went wrong.'}</p>}
               <FormProvider {...formMethods}>
                 <form id={formID} onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-grid">
@@ -179,6 +190,8 @@ export const FormBlockClient: React.FC<
                         return null
                       })}
                   </div>
+
+                  <Turnstile onToken={setCaptchaToken} resetSignal={captchaReset} />
 
                   <div className="form-submit-row">
                     <p className="form-submit-note">

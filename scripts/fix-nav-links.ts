@@ -43,9 +43,9 @@ const run = async () => {
   let footerChanged = 0
 
   const footerNavItems = (footer.navItems || []).map((item) => {
-    if (item.link?.label === 'Contact Us' && item.link.url !== '/contact') {
+    if (item.link?.label === 'Contact Us' && item.link.url !== '/contact-us') {
       footerChanged++
-      return { ...item, link: { ...item.link, url: '/contact' } }
+      return { ...item, link: { ...item.link, url: '/contact-us' } }
     }
     return item
   })

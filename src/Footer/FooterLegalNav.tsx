@@ -76,7 +76,11 @@ export const FooterLegalNav: React.FC<{ items: NavItem[] }> = ({ items }) => {
         key={`${clone ? 'clone' : 'orig'}-${id ?? i}`}
         link={link}
         tabIndex={clone ? -1 : undefined}
-      />
+      >
+        <span className="site-footer-legal-link-label" data-text={link?.label || ''}>
+          {link?.label}
+        </span>
+      </SiteLink>
     ))
 
   return (

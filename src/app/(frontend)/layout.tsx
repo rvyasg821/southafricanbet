@@ -5,6 +5,7 @@ import { Bricolage_Grotesque } from 'next/font/google'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
+import { SiteLoader } from '@/components/SiteLoader'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
@@ -25,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { isEnabled } = await draftMode()
 
   return (
-    <html className={cn(bricolage.variable)} lang="en" suppressHydrationWarning>
+    <html className={cn(bricolage.variable)} data-scroll-behavior="smooth" lang="en" suppressHydrationWarning>
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
@@ -35,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
       </head>
       <body>
+        <SiteLoader />
         <Providers>
           <AdminBar
             adminBarProps={{

@@ -17,7 +17,7 @@ module.exports = {
       ? [
           {
             userAgent: '*',
-            disallow: '/admin/*',
+            disallow: ['/admin/*', '/links/'],
           },
         ]
       : [

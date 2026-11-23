@@ -1,13 +1,13 @@
 import { Star } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
 
 import type { Review } from '@/payload-types'
 
 import { BookmakerLogo } from '@/components/BookmakerLogo'
 import { SiteLink } from '@/components/Link/SiteLink'
+import { PlayLink } from '@/components/review/PlayLink'
+import { ReviewLink } from '@/components/review/ReviewLink'
 import { cn } from '@/utilities/ui'
-import { reviewHref } from '@/utilities/reviewHref'
 import type { LinkFields } from '@/utilities/linkHref'
 
 /** "Top 5 Verified Bookmakers" widget: ranked rows with logo, rating, offer and a PLAY button. */
@@ -28,9 +28,9 @@ export const CompactList: React.FC<{
           <BookmakerLogo className="compact-list-logo" review={review} />
           <div className="compact-list-info">
             <div className="compact-list-info-top">
-              <Link className="compact-list-name" href={reviewHref(review.slug)}>
+              <ReviewLink className="compact-list-name" slug={review.slug}>
                 {review.title}
-              </Link>
+              </ReviewLink>
               <span className="compact-list-rating">
                 <Star aria-hidden="true" className="compact-list-star-icon" />
                 {review.rating.toFixed(1)}
@@ -39,9 +39,9 @@ export const CompactList: React.FC<{
             </div>
             {review.bonusText && <p className="compact-list-bonus">{review.bonusText}</p>}
           </div>
-          <Link className={cn('btn-primary', 'btn-size-compact')} href={reviewHref(review.slug)}>
+          <PlayLink className={cn('btn-primary', 'btn-size-compact')} review={review}>
             Play
-          </Link>
+          </PlayLink>
         </li>
       ))}
     </ol>

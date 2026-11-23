@@ -1,12 +1,14 @@
 import type { LucideIcon } from 'lucide-react'
 import {
   AlertTriangle,
+  Cherry,
   Clock,
   GiftIcon,
   HelpCircleIcon,
   HomeIcon,
   SearchIcon,
   ShieldCheckIcon,
+  Smartphone,
   StarIcon,
   TrophyIcon,
   Volleyball,
@@ -24,6 +26,8 @@ export const ICON_OPTIONS = [
   { label: 'Search', value: 'search' },
   { label: 'Clock', value: 'clock' },
   { label: 'Warning', value: 'warning' },
+  { label: 'Mobile', value: 'mobile' },
+  { label: 'Slots', value: 'slots' },
 ] as const
 
 export const ICON_MAP: Record<string, LucideIcon> = {
@@ -37,6 +41,8 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   search: SearchIcon,
   clock: Clock,
   warning: AlertTriangle,
+  mobile: Smartphone,
+  slots: Cherry,
 }
 
 export const NavIcon: React.FC<{ icon?: string | null; size?: number; color?: string; className?: string }> = ({

@@ -3,7 +3,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
-import { Plugin } from 'payload'
+import { APIError, type CollectionBeforeValidateHook, Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -11,6 +11,7 @@ import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post, Review } from '@/payload-types'
+import { verifyCaptcha } from '@/utilities/captcha'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page | Review> = ({ doc }) => {
@@ -21,6 +22,17 @@ const generateURL: GenerateURL<Post | Page | Review> = ({ doc }) => {
   const url = getServerSideURL()
 
   return doc?.slug ? `${url}/${doc.slug}` : url
+}
+
+/** Public contact-form posts must carry a valid Turnstile token (sent in the x-captcha-token header). */
+const requireCaptcha: CollectionBeforeValidateHook = async ({ data, operation, req }) => {
+  if (operation !== 'create' || req.user || req.payloadAPI === 'local') return data
+
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  if (!(await verifyCaptcha(req.headers.get('x-captcha-token'), ip))) {
+    throw new APIError('Captcha check failed. Please try again.', 400, undefined, true)
+  }
+  return data
 }
 
 export const plugins: Plugin[] = [
@@ -57,6 +69,9 @@ export const plugins: Plugin[] = [
   formBuilderPlugin({
     fields: {
       payment: false,
+    },
+    formSubmissionOverrides: {
+      hooks: { beforeValidate: [requireCaptcha] },
     },
     formOverrides: {
       fields: ({ defaultFields }) => {

@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
@@ -6,9 +7,11 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
+import { OutgoingLinks } from './collections/OutgoingLinks'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Reviews } from './collections/Reviews'
+import { Subscribers } from './collections/Subscribers'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
@@ -63,7 +66,21 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL,
     },
   }),
-  collections: [Pages, Posts, Reviews, Media, Categories, Users],
+  collections: [Pages, Posts, Reviews, OutgoingLinks, Subscribers, Media, Categories, Users],
+  // Real emails (contact form, newsletter alerts) are sent once SMTP_HOST is set; without it Payload just
+  // prints them to the terminal.
+  email: process.env.SMTP_HOST
+    ? nodemailerAdapter({
+        defaultFromAddress: process.env.EMAIL_FROM_ADDRESS || 'no-reply@southafricanbet.co.za',
+        defaultFromName: 'SouthAfricanBet.co.za',
+        transportOptions: {
+          auth: process.env.SMTP_USER ? { pass: process.env.SMTP_PASS, user: process.env.SMTP_USER } : undefined,
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT || 587),
+          secure: Number(process.env.SMTP_PORT) === 465,
+        },
+      })
+    : undefined,
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,

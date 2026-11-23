@@ -70,6 +70,8 @@ export interface Config {
     pages: Page;
     posts: Post;
     reviews: Review;
+    'outgoing-links': OutgoingLink;
+    subscribers: Subscriber;
     media: Media;
     categories: Category;
     users: User;
@@ -93,6 +95,8 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    'outgoing-links': OutgoingLinksSelect<false> | OutgoingLinksSelect<true>;
+    subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -242,6 +246,8 @@ export interface Page {
                   | 'search'
                   | 'clock'
                   | 'warning'
+                  | 'mobile'
+                  | 'slots'
                 )
               | null;
             /**
@@ -697,7 +703,7 @@ export interface Review {
   bonusText: string;
   promotionalCode?: string | null;
   /**
-   * Affiliate / "Play Now" link. Every Play Now and Claim Bonus button on this review page uses this one link.
+   * Affiliate / "Play Now" link. Every Play Now and Claim Bonus button on this review page uses this one link. For a third-party site, enter the local redirect link (e.g. /links/10bet) — it opens the "Redirecting…" page first. Add the destination under Outgoing Links.
    */
   playNowUrl?: string | null;
   features?:
@@ -865,7 +871,21 @@ export interface CallToActionBlock {
            * Optional icon rendered next to the label (not embedded in the text).
            */
           icon?:
-            | ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning')
+            | (
+                | ''
+                | 'home'
+                | 'trophy'
+                | 'sports'
+                | 'gift'
+                | 'star'
+                | 'shield'
+                | 'help'
+                | 'search'
+                | 'clock'
+                | 'warning'
+                | 'mobile'
+                | 'slots'
+              )
             | null;
           /**
            * Choose how the link should be rendered.
@@ -925,7 +945,21 @@ export interface ContentBlock {
            * Optional icon rendered next to the label (not embedded in the text).
            */
           icon?:
-            | ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning')
+            | (
+                | ''
+                | 'home'
+                | 'trophy'
+                | 'sports'
+                | 'gift'
+                | 'star'
+                | 'shield'
+                | 'help'
+                | 'search'
+                | 'clock'
+                | 'warning'
+                | 'mobile'
+                | 'slots'
+              )
             | null;
           /**
            * Choose how the link should be rendered.
@@ -1344,6 +1378,8 @@ export interface FlexibleColumnsBlock {
                       | 'search'
                       | 'clock'
                       | 'warning'
+                      | 'mobile'
+                      | 'slots'
                     )
                   | null;
               };
@@ -1421,7 +1457,22 @@ export interface ReviewsBlock {
      * Optional icon rendered next to the label (not embedded in the text).
      */
     icon?:
-      ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning') | null;
+      | (
+          | ''
+          | 'home'
+          | 'trophy'
+          | 'sports'
+          | 'gift'
+          | 'star'
+          | 'shield'
+          | 'help'
+          | 'search'
+          | 'clock'
+          | 'warning'
+          | 'mobile'
+          | 'slots'
+        )
+      | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1477,7 +1528,22 @@ export interface PostsBlock {
      * Optional icon rendered next to the label (not embedded in the text).
      */
     icon?:
-      ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning') | null;
+      | (
+          | ''
+          | 'home'
+          | 'trophy'
+          | 'sports'
+          | 'gift'
+          | 'star'
+          | 'shield'
+          | 'help'
+          | 'search'
+          | 'clock'
+          | 'warning'
+          | 'mobile'
+          | 'slots'
+        )
+      | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1603,7 +1669,22 @@ export interface FeatureGridBlock {
      * Optional icon rendered next to the label (not embedded in the text).
      */
     icon?:
-      ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning') | null;
+      | (
+          | ''
+          | 'home'
+          | 'trophy'
+          | 'sports'
+          | 'gift'
+          | 'star'
+          | 'shield'
+          | 'help'
+          | 'search'
+          | 'clock'
+          | 'warning'
+          | 'mobile'
+          | 'slots'
+        )
+      | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -1705,7 +1786,21 @@ export interface FaqBlock {
            * Optional icon rendered next to the label (not embedded in the text).
            */
           icon?:
-            | ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning')
+            | (
+                | ''
+                | 'home'
+                | 'trophy'
+                | 'sports'
+                | 'gift'
+                | 'star'
+                | 'shield'
+                | 'help'
+                | 'search'
+                | 'clock'
+                | 'warning'
+                | 'mobile'
+                | 'slots'
+              )
             | null;
         };
         id?: string | null;
@@ -1733,7 +1828,22 @@ export interface FaqBlock {
      * Optional icon rendered next to the label (not embedded in the text).
      */
     icon?:
-      ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning') | null;
+      | (
+          | ''
+          | 'home'
+          | 'trophy'
+          | 'sports'
+          | 'gift'
+          | 'star'
+          | 'shield'
+          | 'help'
+          | 'search'
+          | 'clock'
+          | 'warning'
+          | 'mobile'
+          | 'slots'
+        )
+      | null;
   };
   id?: string | null;
   blockName?: string | null;
@@ -1800,7 +1910,22 @@ export interface TeamSpotlightBlock {
      * Optional icon rendered next to the label (not embedded in the text).
      */
     icon?:
-      ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning') | null;
+      | (
+          | ''
+          | 'home'
+          | 'trophy'
+          | 'sports'
+          | 'gift'
+          | 'star'
+          | 'shield'
+          | 'help'
+          | 'search'
+          | 'clock'
+          | 'warning'
+          | 'mobile'
+          | 'slots'
+        )
+      | null;
   };
   id?: string | null;
   blockName?: string | null;
@@ -3848,6 +3973,42 @@ export interface ReviewFaqBlock {
   blockType: 'reviewFaq';
 }
 /**
+ * Third-party links shown through the "Redirecting…" page. Use /links/<slug> (e.g. /links/10bet) as the Play Now link anywhere on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "outgoing-links".
+ */
+export interface OutgoingLink {
+  id: number;
+  /**
+   * Shown on the redirect page, e.g. "10Bet".
+   */
+  title: string;
+  /**
+   * The full third-party / affiliate URL, starting with https://
+   */
+  url: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Email addresses collected by the footer newsletter form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers".
+ */
+export interface Subscriber {
+  id: number;
+  email: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -4057,6 +4218,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'reviews';
         value: number | Review;
+      } | null)
+    | ({
+        relationTo: 'outgoing-links';
+        value: number | OutgoingLink;
+      } | null)
+    | ({
+        relationTo: 'subscribers';
+        value: number | Subscriber;
       } | null)
     | ({
         relationTo: 'media';
@@ -5318,6 +5487,27 @@ export interface ReviewsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "outgoing-links_select".
+ */
+export interface OutgoingLinksSelect<T extends boolean = true> {
+  title?: T;
+  url?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers_select".
+ */
+export interface SubscribersSelect<T extends boolean = true> {
+  email?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -5763,7 +5953,21 @@ export interface Header {
            * Optional icon rendered next to the label (not embedded in the text).
            */
           icon?:
-            | ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning')
+            | (
+                | ''
+                | 'home'
+                | 'trophy'
+                | 'sports'
+                | 'gift'
+                | 'star'
+                | 'shield'
+                | 'help'
+                | 'search'
+                | 'clock'
+                | 'warning'
+                | 'mobile'
+                | 'slots'
+              )
             | null;
         };
         /**
@@ -5809,7 +6013,22 @@ export interface Header {
      * Optional icon rendered next to the label (not embedded in the text).
      */
     icon?:
-      ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning') | null;
+      | (
+          | ''
+          | 'home'
+          | 'trophy'
+          | 'sports'
+          | 'gift'
+          | 'star'
+          | 'shield'
+          | 'help'
+          | 'search'
+          | 'clock'
+          | 'warning'
+          | 'mobile'
+          | 'slots'
+        )
+      | null;
     /**
      * Choose how the link should be rendered.
      */
@@ -5861,7 +6080,21 @@ export interface Footer {
            * Optional icon rendered next to the label (not embedded in the text).
            */
           icon?:
-            | ('' | 'home' | 'trophy' | 'sports' | 'gift' | 'star' | 'shield' | 'help' | 'search' | 'clock' | 'warning')
+            | (
+                | ''
+                | 'home'
+                | 'trophy'
+                | 'sports'
+                | 'gift'
+                | 'star'
+                | 'shield'
+                | 'help'
+                | 'search'
+                | 'clock'
+                | 'warning'
+                | 'mobile'
+                | 'slots'
+              )
             | null;
         };
         id?: string | null;
@@ -5906,6 +6139,8 @@ export interface Footer {
                       | 'search'
                       | 'clock'
                       | 'warning'
+                      | 'mobile'
+                      | 'slots'
                     )
                   | null;
               };
