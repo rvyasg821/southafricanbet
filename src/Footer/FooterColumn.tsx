@@ -1,20 +1,20 @@
 'use client'
 import { ChevronDown } from 'lucide-react'
-import React, { useState } from 'react'
+import React from 'react'
 
 import type { Footer } from '@/payload-types'
 
-import { SiteLink } from '@/components/Link/SiteLink'
+import { NavLink } from '@/components/Link/NavLink'
 import { cn } from '@/utilities/ui'
 
 type FooterColumnData = NonNullable<Footer['columns']>[number]
 
 /** One footer link group. Collapses into an accordion on mobile/tablet; always open from the desktop breakpoint up. */
-export const FooterColumn: React.FC<{ column: FooterColumnData; defaultOpen?: boolean }> = ({
+export const FooterColumn: React.FC<{ column: FooterColumnData; onToggle: () => void; open: boolean }> = ({
   column,
-  defaultOpen,
+  onToggle,
+  open,
 }) => {
-  const [open, setOpen] = useState(!!defaultOpen)
   const navItems = column.navItems || []
 
   return (
@@ -22,7 +22,7 @@ export const FooterColumn: React.FC<{ column: FooterColumnData; defaultOpen?: bo
       <button
         aria-expanded={open}
         className="site-footer-column-toggle"
-        onClick={() => setOpen((value) => !value)}
+        onClick={onToggle}
         type="button"
       >
         <span className="site-footer-column-title">{column.title}</span>
@@ -36,7 +36,7 @@ export const FooterColumn: React.FC<{ column: FooterColumnData; defaultOpen?: bo
         <ul className="site-footer-column-list">
           {navItems.map(({ id, link }, j) => (
             <li key={id ?? j}>
-              <SiteLink className="site-footer-column-link" link={link} />
+              <NavLink activeClassName="site-footer-column-link-active" className="site-footer-column-link" link={link} />
             </li>
           ))}
         </ul>

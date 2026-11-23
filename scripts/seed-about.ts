@@ -223,7 +223,7 @@ async function run() {
               ),
               { type: 'socialRow' as const },
               buttonItem('See top betting sites', '/reviews'),
-              buttonItem('Contact us', '/contact'),
+              buttonItem('Contact us', '/contact-us'),
             ],
           },
         ],

@@ -266,12 +266,12 @@ async function run() {
       description:
         'Get in touch with the SouthAfricanBet.co.za team - general enquiries, media and partnerships, or corrections to a review. We reply within 24 hours.',
     },
-    slug: 'contact',
+    slug: 'contact-us',
     title: 'Contact Us',
     _status: 'published' as const,
   }
 
-  const existing = await payload.find({ collection: 'pages', limit: 1, where: { slug: { equals: 'contact' } } })
+  const existing = await payload.find({ collection: 'pages', limit: 1, where: { slug: { equals: 'contact-us' } } })
   if (existing.docs[0]) {
     await payload.update({ collection: 'pages', id: existing.docs[0].id, data, context: ctx })
     payload.logger.info(`Updated contact page (id ${existing.docs[0].id})`)

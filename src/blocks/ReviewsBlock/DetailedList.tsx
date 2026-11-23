@@ -1,13 +1,13 @@
 import { ArrowRight, Star, Trophy } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
 
 import type { Review } from '@/payload-types'
 
 import { BookmakerLogo } from '@/components/BookmakerLogo'
 import { PaymentsSlider } from '@/components/PaymentsSlider'
+import { PlayLink } from '@/components/review/PlayLink'
+import { ReviewLink } from '@/components/review/ReviewLink'
 import { cn } from '@/utilities/ui'
-import { reviewHref } from '@/utilities/reviewHref'
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => (
   <span aria-label={`${rating} out of 5`} className="detailed-list-stars-wrap">
@@ -40,7 +40,7 @@ export const DetailedList: React.FC<{ reviews: Review[] }> = ({ reviews }) => (
               <BookmakerLogo className="detailed-list-logo" review={review} />
               <div>
                 <h3 className="detailed-list-title">
-                  <Link href={reviewHref(review.slug)}>{review.title}</Link>
+                  <ReviewLink slug={review.slug}>{review.title}</ReviewLink>
                 </h3>
                 <div className="detailed-list-rating-row">
                   <span className="detailed-list-rating-number">{review.rating.toFixed(1)}</span>
@@ -60,12 +60,12 @@ export const DetailedList: React.FC<{ reviews: Review[] }> = ({ reviews }) => (
             </div>
 
             <div className="detailed-list-cta-col">
-              <Link className={cn('btn-primary', 'btn-flex-1', 'btn-size-responsive')} href={reviewHref(review.slug)}>
+              <PlayLink className={cn('btn-primary', 'btn-flex-1', 'btn-size-responsive')} review={review}>
                 Play Now
-              </Link>
-              <Link className="detailed-list-read-review-button" href={reviewHref(review.slug)}>
+              </PlayLink>
+              <ReviewLink className="detailed-list-read-review-button" slug={review.slug}>
                 Read Review <ArrowRight aria-hidden="true" className="detailed-list-read-review-icon" />
-              </Link>
+              </ReviewLink>
             </div>
           </div>
 

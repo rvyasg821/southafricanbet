@@ -1,13 +1,13 @@
 'use client'
 import { BadgeCheck, Check, ChevronDown, Copy, Star } from 'lucide-react'
-import Link from 'next/link'
 import React, { useState } from 'react'
 
 import type { Review } from '@/payload-types'
 
 import { BookmakerLogo } from '@/components/BookmakerLogo'
+import { ReviewLink } from '@/components/review/ReviewLink'
+import { PlayLink } from '@/components/review/PlayLink'
 import { cn } from '@/utilities/ui'
-import { reviewHref } from '@/utilities/reviewHref'
 
 const PromoCode: React.FC<{ code: string }> = ({ code }) => {
   const [copied, setCopied] = useState(false)
@@ -72,7 +72,7 @@ export const CardGrid: React.FC<{ initialVisible?: number | null; reviews: Revie
                 <BookmakerLogo className="card-grid-logo" review={review} />
                 <div>
                   <h3 className="card-grid-title">
-                    <Link href={reviewHref(review.slug)}>{review.title}</Link>
+                    <ReviewLink slug={review.slug}>{review.title}</ReviewLink>
                   </h3>
                   <span className="card-grid-rating-row">
                     <Star aria-hidden="true" className="card-grid-star-icon" />
@@ -121,12 +121,12 @@ export const CardGrid: React.FC<{ initialVisible?: number | null; reviews: Revie
               </dl>
 
               <div className="card-grid-cta-row">
-                <Link className={cn('btn-primary', 'btn-flex-1')} href={reviewHref(review.slug)}>
+                <PlayLink className={cn('btn-primary', 'btn-flex-1')} review={review}>
                   Play Now
-                </Link>
-                <Link className="btn-outline-small" href={reviewHref(review.slug)}>
+                </PlayLink>
+                <ReviewLink className="btn-outline-small" slug={review.slug}>
                   Review
-                </Link>
+                </ReviewLink>
               </div>
               <p className="card-grid-disclaimer">18+ Only | Play Responsibly</p>
             </article>

@@ -135,12 +135,24 @@ const ColumnItemRenderer: React.FC<{ inCard?: boolean; item: ColumnItem; socialL
           {socialLinks.map(({ id, platform, url }, i) => {
             const social = SOCIAL_PATHS[platform]
             if (!social) return null
-            return (
-              <Link aria-label={social.label} className="flex-columns-social-link" href={url} key={id ?? i}>
+            const content = (
+              <>
                 <svg aria-hidden="true" className="flex-columns-social-icon" viewBox="0 0 24 24">
                   <path d={social.path} />
                 </svg>
                 {social.label}
+              </>
+            )
+            if (url === '#') {
+              return (
+                <span aria-label={social.label} className="flex-columns-social-link" key={id ?? i}>
+                  {content}
+                </span>
+              )
+            }
+            return (
+              <Link aria-label={social.label} className="flex-columns-social-link" href={url} key={id ?? i}>
+                {content}
               </Link>
             )
           })}

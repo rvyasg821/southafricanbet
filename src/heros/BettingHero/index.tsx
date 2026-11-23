@@ -42,16 +42,31 @@ const OfferTicker: React.FC = async () => {
       <div className={cn('animate-marquee', 'hero-ticker-track')}>
         {[...docs, ...docs].map((review, i) => {
           const clone = i >= docs.length
+          const content = (
+            <>
+              <Sparkles aria-hidden="true" className="hero-ticker-icon" /> {review.title}:{' '}
+              <span className="hero-ticker-offer">{review.bonusText}</span>
+            </>
+          )
+          const href = reviewHref(review.slug)
+
+          if (href === '#') {
+            return (
+              <span aria-hidden={clone || undefined} className="hero-ticker-item" key={i}>
+                {content}
+              </span>
+            )
+          }
+
           return (
             <Link
               aria-hidden={clone || undefined}
               className="hero-ticker-item"
-              href={reviewHref(review.slug)}
+              href={href}
               key={i}
               tabIndex={clone ? -1 : undefined}
             >
-              <Sparkles aria-hidden="true" className="hero-ticker-icon" /> {review.title}:{' '}
-              <span className="hero-ticker-offer">{review.bonusText}</span>
+              {content}
             </Link>
           )
         })}

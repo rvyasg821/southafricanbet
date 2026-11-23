@@ -4,4 +4,10 @@
  */
 export const REVIEW_PAGE_EXISTS = true
 
-export const reviewHref = (slug: string): string => (REVIEW_PAGE_EXISTS ? `/reviews/${slug}` : '#')
+/** Slugs temporarily pulled from linking (still shown, just not clickable to their detail page). */
+const DISABLED_REVIEW_SLUGS = new Set(['easybet'])
+
+export const isReviewLinkDisabled = (slug: string): boolean => DISABLED_REVIEW_SLUGS.has(slug)
+
+export const reviewHref = (slug: string): string =>
+  REVIEW_PAGE_EXISTS && !isReviewLinkDisabled(slug) ? `/reviews/${slug}` : '#'

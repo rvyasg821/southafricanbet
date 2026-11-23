@@ -11,10 +11,12 @@ import { CmsImg } from '@/components/CmsImg'
 import { SiteLink } from '@/components/Link/SiteLink'
 import { cn } from '@/utilities/ui'
 import { getLinkHref } from '@/utilities/linkHref'
+import { isActivePath } from '@/utilities/isActivePath'
 import { SearchPanel } from './SearchPanel'
 
 interface HeaderClientProps {
   data: Header
+  topOffer?: { playNowUrl: string; title: string } | null
 }
 
 /** Emoji shown in the round chip next to each menu item (picked via the link's "Icon"). */
@@ -22,16 +24,20 @@ const ICON_EMOJI: Record<string, string> = {
   gift: '🎁',
   help: '❓',
   home: '🏠',
+  mobile: '📱',
   shield: '🛡️',
+  slots: '🎰',
   sports: '⚽',
   star: '⭐',
   trophy: '🏆',
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ data, topOffer }) => {
   const [searchOpen, setSearchOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openMobileIndex, setOpenMobileIndex] = useState<number | null>(null)
+  // Desktop dropdown that was just used: kept shut until the pointer leaves it (hover/focus would reopen it).
+  const [closedDropdown, setClosedDropdown] = useState<number | null>(null)
   const closeSearch = useCallback(() => setSearchOpen(false), [])
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
@@ -124,9 +130,19 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           <nav aria-label="Primary" className="site-header-nav" id="primary-navigation">
             {navItems.map(({ children, hasDropdown, iconImage, id, link }, i) => {
               const dropdown = hasDropdown || (children && children.length > 0)
+              const active =
+                isActivePath(pathname, getLinkHref(link)) || !!children?.some((child) => isActivePath(pathname, child.url))
               return (
-                <div className="site-header-nav-item" key={id ?? i}>
-                  <SiteLink className="site-header-nav-link" link={link}>
+                <div
+                  className={cn('site-header-nav-item', closedDropdown === i && 'site-header-nav-item-closed')}
+                  key={id ?? i}
+                  onMouseLeave={() => closedDropdown === i && setClosedDropdown(null)}
+                >
+                  <SiteLink
+                    aria-current={active ? 'page' : undefined}
+                    className={cn('site-header-nav-link', active && 'site-header-nav-link-active')}
+                    link={link}
+                  >
                     <span className="site-header-nav-icon-chip">
                       {iconImage && typeof iconImage === 'object' ? (
                         <CmsImg alt="" className="site-header-nav-icon-image" resource={iconImage} />
@@ -140,11 +156,29 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
                   {children && children.length > 0 && (
                     <div className="site-header-dropdown-panel">
                       <div className="site-header-dropdown-inner">
-                        {children.map((child, j) => (
-                          <Link className="site-header-dropdown-link" href={child.url} key={child.id ?? j}>
-                            {child.label}
-                          </Link>
-                        ))}
+                        {children.map((child, j) =>
+                          child.url === '#' ? (
+                            <span className="site-header-dropdown-link" key={child.id ?? j}>
+                              {child.label}
+                            </span>
+                          ) : (
+                            <Link
+                              aria-current={isActivePath(pathname, child.url) ? 'page' : undefined}
+                              className={cn(
+                                'site-header-dropdown-link',
+                                isActivePath(pathname, child.url) && 'site-header-dropdown-link-active',
+                              )}
+                              href={child.url}
+                              key={child.id ?? j}
+                              onClick={(e) => {
+                                setClosedDropdown(i)
+                                e.currentTarget.blur()
+                              }}
+                            >
+                              {child.label}
+                            </Link>
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
@@ -184,11 +218,21 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
                 )
 
               if (!hasChildren) {
+                if (!href || href === '#') {
+                  return (
+                    <div className="site-header-mobile-item" key={id ?? i}>
+                      <span className="site-header-mobile-link">
+                        <span className="site-header-nav-icon-chip">{icon}</span>
+                        {link?.label}
+                      </span>
+                    </div>
+                  )
+                }
                 return (
                   <div className="site-header-mobile-item" key={id ?? i}>
                     <Link
                       className={cn('site-header-mobile-link', isActive && 'site-header-mobile-link-active')}
-                      href={href || '#'}
+                      href={href}
                       onClick={() => setMenuOpen(false)}
                     >
                       <span className="site-header-nav-icon-chip">{icon}</span>
@@ -202,7 +246,11 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
                 <div className="site-header-mobile-item" key={id ?? i}>
                   <button
                     aria-expanded={isOpen}
-                    className={cn('site-header-mobile-toggle', isOpen && 'site-header-mobile-toggle-open')}
+                    className={cn(
+                      'site-header-mobile-toggle',
+                      isOpen && 'site-header-mobile-toggle-open',
+                      children.some((child) => isActivePath(pathname, child.url)) && 'site-header-mobile-link-active',
+                    )}
                     onClick={() => toggleMobileItem(i)}
                     type="button"
                   >
@@ -216,6 +264,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
                   <div className={cn('site-header-mobile-panel', isOpen && 'site-header-mobile-panel-open')}>
                     <div className="site-header-mobile-sub-list">
                       {children.map((child, j) => {
+                        if (child.url === '#') {
+                          return (
+                            <span className="site-header-mobile-sub" key={child.id ?? j}>
+                              {child.label}
+                            </span>
+                          )
+                        }
                         const childActive = pathname === child.url
                         return (
                           <Link
@@ -252,8 +307,18 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
                 <Search aria-hidden="true" className="site-header-icon-button-icon" />
               )}
             </button>
-            {data?.ctaLink && getLinkHref(data.ctaLink) && (
-              <SiteLink className="site-header-cta-button" link={data.ctaLink} />
+            {topOffer ? (
+              <a
+                className="site-header-cta-button"
+                href={topOffer.playNowUrl}
+                rel="nofollow noopener sponsored"
+                target="_blank"
+              >
+                {data?.ctaLink?.label || 'Get Bonus'}
+              </a>
+            ) : (
+              data?.ctaLink &&
+              getLinkHref(data.ctaLink) && <SiteLink className="site-header-cta-button" link={data.ctaLink} />
             )}
             <button
               aria-expanded={menuOpen}

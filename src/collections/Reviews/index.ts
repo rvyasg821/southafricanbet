@@ -162,7 +162,7 @@ export const Reviews: CollectionConfig<'reviews'> = {
               type: 'text',
               admin: {
                 description:
-                  'Affiliate / "Play Now" link. Every Play Now and Claim Bonus button on this review page uses this one link.',
+                  'Affiliate / "Play Now" link. Every Play Now and Claim Bonus button on this review page uses this one link. For a third-party site, enter the local redirect link (e.g. /links/10bet) — it opens the "Redirecting…" page first. Add the destination under Outgoing Links.',
               },
               label: 'Play Now link',
             },

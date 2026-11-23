@@ -64,12 +64,24 @@ export const FormSidebar: React.FC<{
             {socialLinks.map(({ id, platform, url }, i) => {
               const social = SOCIAL_PATHS[platform]
               if (!social) return null
-              return (
-                <Link aria-label={social.label} className="form-sidebar-social-link" href={url} key={id ?? i}>
+              const content = (
+                <>
                   <svg aria-hidden="true" className="form-sidebar-social-icon" viewBox="0 0 24 24">
                     <path d={social.path} />
                   </svg>
                   {social.label}
+                </>
+              )
+              if (url === '#') {
+                return (
+                  <span aria-label={social.label} className="form-sidebar-social-link" key={id ?? i}>
+                    {content}
+                  </span>
+                )
+              }
+              return (
+                <Link aria-label={social.label} className="form-sidebar-social-link" href={url} key={id ?? i}>
+                  {content}
                 </Link>
               )
             })}
