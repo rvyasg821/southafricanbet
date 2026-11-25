@@ -16,6 +16,7 @@ export const Subscribers: CollectionConfig<'subscribers'> = {
     update: authenticated,
   },
   admin: {
+    group: 'Marketing',
     defaultColumns: ['email', 'createdAt'],
     description: 'Email addresses collected by the footer newsletter form.',
     useAsTitle: 'email',

@@ -23,6 +23,7 @@ export const OutgoingLinks: CollectionConfig<'outgoing-links'> = {
     update: authenticated,
   },
   admin: {
+    group: 'Marketing',
     defaultColumns: ['title', 'slug', 'url', 'updatedAt'],
     description:
       'Third-party links shown through the "Redirecting…" page. Use /links/<slug> (e.g. /links/10bet) as the Play Now link anywhere on the site.',
