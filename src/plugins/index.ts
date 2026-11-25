@@ -1,4 +1,5 @@
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { payloadTheme } from 'payload-theme'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -36,9 +37,35 @@ const requireCaptcha: CollectionBeforeValidateHook = async ({ data, operation, r
 }
 
 export const plugins: Plugin[] = [
+  payloadTheme({
+    accent: '#e11d2e',
+    logo: { dark: '/media/logo-full-dark.png', light: '/media/logo-full.png' },
+    logoHeight: 42,
+    login: { heading: 'Welcome back', tagline: 'Sign in to manage SouthAfricanBet.co.za.' },
+    nav: {
+      icons: {
+        categories: 'tag',
+        footer: 'panel-bottom',
+        forms: 'clipboard-list',
+        'form-submissions': 'inbox',
+        header: 'panel-top',
+        media: 'image',
+        'outgoing-links': 'external-link',
+        pages: 'file-text',
+        posts: 'newspaper',
+        redirects: 'corner-up-right',
+        reviews: 'star',
+        search: 'search',
+        subscribers: 'mail',
+        users: 'users',
+      },
+    },
+    radius: 'lg',
+  }),
   redirectsPlugin({
     collections: ['pages', 'posts', 'reviews'],
     overrides: {
+      admin: { group: 'Settings' },
       // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
@@ -71,9 +98,11 @@ export const plugins: Plugin[] = [
       payment: false,
     },
     formSubmissionOverrides: {
+      admin: { group: 'Marketing' },
       hooks: { beforeValidate: [requireCaptcha] },
     },
     formOverrides: {
+      admin: { group: 'Marketing' },
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           if ('name' in field && field.name === 'confirmationMessage') {
@@ -99,6 +128,7 @@ export const plugins: Plugin[] = [
     collections: ['posts', 'reviews'],
     beforeSync: beforeSyncWithSearch,
     searchOverrides: {
+      admin: { group: 'Settings' },
       fields: ({ defaultFields }) => {
         return [...defaultFields, ...searchFields]
       },

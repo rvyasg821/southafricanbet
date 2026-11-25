@@ -57,6 +57,7 @@ export const Reviews: CollectionConfig<'reviews'> = {
     },
   },
   admin: {
+    group: 'Content',
     defaultColumns: ['title', 'rank', 'rating', 'featured', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>

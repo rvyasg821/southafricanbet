@@ -1,0 +1,83 @@
+@import 'payload-theme/styles.css';
+
+// Login screen: dark brand panel uses a betting-themed photo instead of the plain gradient.
+// The theme's own glow/grid layers are turned off since the photo replaces them.
+.pt-login-hero {
+  background: url('/media/login-hero-bg.jpg') center / cover no-repeat;
+}
+.pt-login-hero__glow,
+.pt-login-hero__grid {
+  display: none;
+}
+
+// Login logo only: bigger than the sidebar logo, and pulled up closer to the top of the card
+// (the sidebar reuses --pt-logo-height globally, so it's sized here instead of via that option).
+.pt-login__logo {
+  margin-top: -16px;
+  margin-bottom: 56px;
+}
+.pt-login__logo-img {
+  height: 64px;
+}
+@media (max-width: 480px) {
+  .pt-login__logo {
+    margin-bottom: 32px;
+  }
+  .pt-login__logo-img {
+    height: 42px;
+  }
+}
+
+// "Logging out..." / loading overlay: restyled to match the live site's loader
+// (src/components/SiteLoader) as closely as Payload's fixed markup allows — same dark
+// background + glow, same chip image/path, same label/tagline/bar treatment. Payload gives us
+// no way to add real elements here, only restyle its own two (.loading-overlay__bars and
+// .loading-overlay__text) with CSS, so the ring-spins/spade-stays-still two-layer trick the
+// site loader uses isn't possible — the whole chip spins together instead.
+.loading-overlay__bars {
+  display: none;
+}
+.loading-overlay {
+  gap: 20px;
+}
+.loading-overlay::after {
+  background:
+    radial-gradient(40rem 26rem at 85% 0%, rgb(225 29 46 / 0.28), transparent 65%),
+    radial-gradient(36rem 24rem at 0% 100%, rgb(240 180 60 / 0.18), transparent 65%),
+    #0b1120 !important;
+  opacity: 1 !important;
+}
+.loading-overlay::before {
+  content: '';
+  width: 72px;
+  height: 72px;
+  background: url('/favicon-512.png') center / contain no-repeat;
+  filter: drop-shadow(0 0 16px rgb(225 29 46 / 0.55));
+  animation: pt-admin-loading-spin 1.4s cubic-bezier(0.55, 0.1, 0.45, 0.9) infinite;
+}
+@keyframes pt-admin-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading-overlay__text {
+  margin-top: 4px;
+  padding-bottom: 14px;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, #007749, #ffb81c, #e11d2e, #002395) 1;
+}
+.loading-overlay__text::after {
+  content: 'SouthAfricanBet.co.za';
+  display: block;
+  margin-top: 6px;
+  padding-bottom: 10px;
+  font: 600 11px/1.4 Inter, system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: rgb(255 255 255 / 0.55);
+}
