@@ -39,7 +39,7 @@ const requireCaptcha: CollectionBeforeValidateHook = async ({ data, operation, r
 export const plugins: Plugin[] = [
   payloadTheme({
     accent: '#e11d2e',
-    logo: { dark: '/media/logo-full-dark.png', light: '/media/logo-full.png' },
+    logo: { dark: '/brand/logo-full-dark.png', light: '/brand/logo-full.png' },
     logoHeight: 42,
     login: { heading: 'Welcome back', tagline: 'Sign in to manage SouthAfricanBet.co.za.' },
     nav: {
