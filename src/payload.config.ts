@@ -35,6 +35,8 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    // Light mode only - the theme/dark-mode toggle and color customizer are hidden in custom.scss.
+    theme: 'light',
     meta: {
       icons: [
         { rel: 'icon', sizes: '32x32', type: 'image/x-icon', url: '/favicon.ico' },
